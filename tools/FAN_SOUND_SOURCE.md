@@ -9,10 +9,10 @@ The author released this recording into the public domain through PDSounds.
 The source page documents permission for commercial use and modification.
 
 Changes: mono conversion, selection of a steady running section, DC removal,
-half-second overlap for continuous looping, and volume normalization. No
+half-second overlap for continuous looping, bass reduction, and soft peak limiting. No
 synthetic hum is mixed in. The original Ogg is retained in this directory.
 
 Regenerate by decoding `table_ventilator_original.ogg` to a mono, 44100 Hz,
 16-bit WAV named `table_ventilator_original.wav`, then running
-`generate_fan_sound.py` with Python and NumPy. This replaces the former
+`generate_fan_sound.py` with Python. This replaces the former
 synthetic recording.

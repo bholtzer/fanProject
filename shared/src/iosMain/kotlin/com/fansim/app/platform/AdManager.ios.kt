@@ -1,43 +1,36 @@
 package com.fansim.app.platform
 
 /**
- * iOS AdMob integration.
- *
- * The Google-Mobile-Ads-SDK for iOS is an Objective-C CocoaPod. Two supported ways to wire
- * it up from Kotlin/Native:
- *   1) Add the pod via the Kotlin CocoaPods Gradle plugin and call it directly through
- *      generated Kotlin/Native cinterop bindings (GADInterstitialAd, GADRewardedAd, etc.).
- *   2) Implement a small native Swift wrapper in iosApp exposing a simple
- *      Objective-C-friendly protocol, and call it from here via the shared framework's
- *      Objective-C interop.
- *
- * This stub keeps the same expect/actual contract as Android so the presentation layer
- * never needs to know which path you choose. Fill in the TODOs with your chosen approach;
- * see the project README for step-by-step setup notes and test ad unit IDs.
+ * Implemented by the native iOS host, keeping Google Mobile Ads out of common code.
+ * Install the bridge before creating MainViewController. All calls run on the UI thread.
  */
+interface IosAdsBridge {
+    fun initialize()
+    fun loadInterstitial()
+    fun showInterstitial(onClosed: () -> Unit)
+    fun loadRewarded()
+    fun showRewarded(onReward: () -> Unit, onClosed: () -> Unit)
+}
+
+object IosAds {
+    private var installedBridge: IosAdsBridge? = null
+
+    fun install(bridge: IosAdsBridge) {
+        check(installedBridge == null) { "Install the iOS ads bridge only once, before creating the UI." }
+        installedBridge = bridge
+    }
+
+    internal fun requireBridge(): IosAdsBridge =
+        checkNotNull(installedBridge) { "Install IosAdsBridge before creating MainViewController." }
+}
+
 actual class AdManager actual constructor() {
+    private val bridge = IosAds.requireBridge()
 
-    actual fun initialize() {
-        // TODO: GADMobileAds.sharedInstance().startWithCompletionHandler { }
-    }
-
-    actual fun loadInterstitial() {
-        // TODO: load a GADInterstitialAd with your ad unit ID
-    }
-
-    actual fun showInterstitial(onClosed: () -> Unit) {
-        // TODO: present the loaded interstitial from the current UIViewController,
-        // then call onClosed() from the dismissal delegate callback.
-        onClosed()
-    }
-
-    actual fun loadRewarded() {
-        // TODO: load a GADRewardedAd with your ad unit ID
-    }
-
-    actual fun showRewarded(onReward: () -> Unit, onClosed: () -> Unit) {
-        // TODO: present the rewarded ad; call onReward() from the reward callback
-        // and onClosed() from the dismissal delegate callback.
-        onClosed()
-    }
+    actual fun initialize() = bridge.initialize()
+    actual fun loadInterstitial() = bridge.loadInterstitial()
+    actual fun showInterstitial(onClosed: () -> Unit) = bridge.showInterstitial(onClosed)
+    actual fun loadRewarded() = bridge.loadRewarded()
+    actual fun showRewarded(onReward: () -> Unit, onClosed: () -> Unit) =
+        bridge.showRewarded(onReward, onClosed)
 }

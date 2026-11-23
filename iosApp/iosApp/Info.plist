@@ -6,9 +6,12 @@
     <string>Fan Simulator</string>
     <key>UILaunchScreen</key>
     <dict/>
-    <!-- TODO: add GADApplicationIdentifier here once you integrate the AdMob iOS SDK, e.g.:
+    <!-- Google demo IDs for development. Replace all three for production. -->
     <key>GADApplicationIdentifier</key>
     <string>ca-app-pub-3940256099942544~1458002511</string>
-    -->
+    <key>AdMobInterstitialID</key>
+    <string>ca-app-pub-3940256099942544/4411468910</string>
+    <key>AdMobRewardedID</key>
+    <string>ca-app-pub-3940256099942544/1712485313</string>
 </dict>
 </plist>

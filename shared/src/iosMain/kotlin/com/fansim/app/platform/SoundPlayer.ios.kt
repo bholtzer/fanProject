@@ -10,6 +10,7 @@ actual class SoundPlayer actual constructor() {
 
     // iosApp must add fan_sound.mp3 (seamless loop) to the Xcode project bundle resources.
     private var player: AVAudioPlayer? = null
+    private var volume = 1f
 
     private fun ensurePlayer(): AVAudioPlayer? {
         var current = player
@@ -18,17 +19,22 @@ actual class SoundPlayer actual constructor() {
             AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient, error = null)
             current = AVAudioPlayer(contentsOfURL = NSURL.fileURLWithPath(path), error = null)
             current.numberOfLoops = -1
+            current.enableRate = true
+            current.volume = volume
             player = current
         }
         return current
     }
 
-    actual fun start() {
-        ensurePlayer()?.play()
+    actual fun start(pitch: Float, speed: Float) {
+        val current = ensurePlayer() ?: return
+        current.rate = (pitch * speed).coerceIn(.5f, 2f)
+        current.play()
     }
 
     actual fun setVolume(volume: Float) {
-        player?.volume = volume.coerceIn(0f, 1f)
+        this.volume = volume.coerceIn(0f, 1f)
+        player?.volume = this.volume
     }
 
     actual fun stop() {
