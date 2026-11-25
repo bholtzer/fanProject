@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
 package com.fansim.app.platform
 
 import platform.AVFAudio.AVAudioPlayer
@@ -8,14 +10,13 @@ import platform.Foundation.NSURL
 
 actual class SoundPlayer actual constructor() {
 
-    // iosApp must add fan_sound.mp3 (seamless loop) to the Xcode project bundle resources.
     private var player: AVAudioPlayer? = null
     private var volume = 1f
 
     private fun ensurePlayer(): AVAudioPlayer? {
         var current = player
         if (current == null) {
-            val path = NSBundle.mainBundle.pathForResource("fan_sound", ofType = "mp3") ?: return null
+            val path = NSBundle.mainBundle.pathForResource("fan_sound", ofType = "wav") ?: return null
             AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryAmbient, error = null)
             current = AVAudioPlayer(contentsOfURL = NSURL.fileURLWithPath(path), error = null)
             current.numberOfLoops = -1

@@ -82,18 +82,25 @@ ANDROID_KEY_PASSWORD=your-key-password
 
 Use forward slashes in the keystore path on Windows. Sync Gradle after setting all four values, then select `release` or build `:androidApp:assembleRelease` / `:androidApp:bundleRelease`. Use the existing upload/signing key for a published app. If this is a new app, create a keystore using Android Studio’s **Build → Generate Signed App Bundle / APK → Create new** and keep a secure backup. Release signing is configured only when all four values are supplied; credentials are never stored in project build scripts.
 
-**iOS:**
-1. Add `fan_sound.mp3` to the `iosApp` Xcode project's bundle resources.
-2. Build the `shared` framework (`./gradlew :shared:embedAndSignAppleFrameworkForXcode` or via Android Studio's KMP wizard), then open `iosApp` in Xcode and run.
-3. This repository contains iOS source files, but no Xcode project. In your macOS Xcode app target, include all files under `iosApp/iosApp`, including `AdMobBridge.swift`, and link the generated `shared` framework.
-4. Add the Swift package `https://github.com/googleads/swift-package-manager-google-mobile-ads.git` and link its `GoogleMobileAds` product (Swift API names in the bridge target SDK 12+). Follow https://developers.google.com/admob/ios/quick-start for deployment requirements and SKAdNetworkItems in the target's Info.plist.
-5. Use the supplied Info.plist (or merge its keys into the target's plist). It contains Google demo app, interstitial and rewarded IDs. Replace all three with your iOS AdMob IDs before publishing; Android IDs cannot be reused. Initialize ads only after any required consent flow completes.
-6. On a simulator/device, verify loaded-ad dismissal, unavailable ads, presentation failure, and rewarded completion versus early dismissal. iOS compilation and runtime verification require macOS/Xcode; an Android build does not validate Swift.
+**iOS testing**
+
+On a Mac, install Xcode 16.0 with an iOS Simulator runtime, JDK 17, Gradle 8.7, Android SDK Platform 35, and [XcodeGen](https://github.com/yonaskolb/XcodeGen). The Android SDK is needed by the Gradle project configuration. If you copy the checkout from Windows, update or recreate `local.properties` with the Mac's Android SDK path. Make Gradle 8.7 available on Xcode's PATH or set `GRADLE_HOME` when launching the build.
+
+From the repository root:
+
+```sh
+xcodegen generate --spec iosApp/project.json
+open iosApp/FanSimulator.xcodeproj
+```
+
+Select the **FanSimulator** scheme and an iPhone simulator, then press **Run**. The target builds the shared Compose framework and bundles the existing WAV loop. To run on a physical iPhone, select your team in **Signing & Capabilities**, connect the iPhone, and select it as the run destination. Use a bundle identifier available to your team.
+
+Check onboarding, fan speed and sound, fullscreen, and settings persistence. Check haptics and proximity on a physical iPhone. The iOS app uses AdMob demo IDs for testing. Verify interstitial dismissal and rewarded completion versus early dismissal on the phone. For distribution, configure your own iOS IDs and consent.
 
 > Note: this project ships as raw Gradle sources without a checked-in Gradle wrapper JAR. Opening it in Android Studio (File → Open) will offer to generate the wrapper automatically; alternatively run `gradle wrapper` once you have Gradle installed locally.
 
 ## Where to plug in your own assets
 
-- `shared/src/androidMain/res/raw/fan_sound.wav` and the iOS bundle equivalent — the looping fan sound. Regenerate the Android asset with `python tools/generate_fan_sound.py`.
+- `shared/src/androidMain/res/raw/fan_sound.wav` also bundled by the iOS target — the looping fan sound. Regenerate the Android asset with `python tools/generate_fan_sound.py`.
 - Real AdMob App IDs and ad unit IDs (`AndroidManifest.xml`, `AdManager.android.kt`, `Info.plist`, `AdManager.ios.kt`).
-- Android app icon: `androidApp/src/main/res/drawable/ic_fan.xml`. The iOS asset catalog still needs its own icon.
+- Launcher icons are in Android's `mipmap-*` resources and the iOS `AppIcon` asset catalog.

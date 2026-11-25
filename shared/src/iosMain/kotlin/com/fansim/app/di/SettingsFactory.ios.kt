@@ -1,3 +1,5 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
 package com.fansim.app.di
 
 import com.russhwolf.settings.NSUserDefaultsSettings

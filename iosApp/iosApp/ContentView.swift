@@ -4,8 +4,6 @@ import shared
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        // MainViewControllerKt.MainViewController() is generated from App.kt's
-        // top-level `fun MainViewController()` wrapper (see MainViewController.kt below).
         MainViewControllerKt.MainViewController()
     }
 
