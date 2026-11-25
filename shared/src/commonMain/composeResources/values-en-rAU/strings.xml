@@ -1,0 +1,9 @@
+<resources>
+    <string name="customize_fan">Customise your fan</string>
+    <string name="customize_intro">A little colour. A name of your own.</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+    <string name="language">Language</string>
+    <string name="choose_language">Choose your language</string>
+    <string name="device_language">Use device language</string>
+</resources>

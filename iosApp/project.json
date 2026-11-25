@@ -1,0 +1,77 @@
+{
+  "name": "FanSimulator",
+  "packages": {
+    "GoogleMobileAds": {
+      "url": "https://github.com/googleads/swift-package-manager-google-mobile-ads.git",
+      "exactVersion": "12.12.0"
+    }
+  },
+  "targets": {
+    "FanSimulator": {
+      "type": "application",
+      "platform": "iOS",
+      "deploymentTarget": "15.0",
+      "sources": [
+        {
+          "path": "iosApp"
+        },
+        {
+          "path": "../shared/src/androidMain/res/raw/fan_sound.wav",
+          "buildPhase": "resources"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "GoogleMobileAds",
+          "product": "GoogleMobileAds"
+        }
+      ],
+      "settings": {
+        "base": {
+          "ASSETCATALOG_COMPILER_APPICON_NAME": "AppIcon",
+          "PRODUCT_BUNDLE_IDENTIFIER": "com.bihstudio.fan",
+          "INFOPLIST_FILE": "iosApp/Info.plist",
+          "MARKETING_VERSION": "1.0.0",
+          "CURRENT_PROJECT_VERSION": "1",
+          "SWIFT_VERSION": "5.0",
+          "TARGETED_DEVICE_FAMILY": "1,2",
+          "CODE_SIGN_STYLE": "Automatic",
+          "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
+          "FRAMEWORK_SEARCH_PATHS": [
+            "$(inherited)",
+            "$(SRCROOT)/../shared/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)"
+          ],
+          "OTHER_LDFLAGS": [
+            "$(inherited)",
+            "-framework",
+            "shared"
+          ],
+          "GENERATE_INFOPLIST_FILE": "YES",
+          "INFOPLIST_KEY_UIApplicationSceneManifest_Generation": "YES"
+        }
+      },
+      "preBuildScripts": [
+        {
+          "name": "Build shared Kotlin framework",
+          "path": "build-shared.sh",
+          "basedOnDependencyAnalysis": false
+        }
+      ]
+    }
+  },
+  "schemes": {
+    "FanSimulator": {
+      "build": {
+        "targets": {
+          "FanSimulator": "all"
+        }
+      },
+      "run": {
+        "config": "Debug"
+      },
+      "archive": {
+        "config": "Release"
+      }
+    }
+  }
+}

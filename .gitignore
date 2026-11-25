@@ -1,0 +1,12 @@
+.gradle/
+.kotlin/
+.idea/
+.run/
+build/
+/local.properties
+/.signing/
+/androidApp/release/
+/artifacts/
+/iosApp/FanSimulator.xcodeproj/
+*.jks
+*.keystore
